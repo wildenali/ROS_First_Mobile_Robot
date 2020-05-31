@@ -103,3 +103,68 @@
         $ roscd duckietown_description;
         $ cp -rf meshes ~/catkin_ws/src/ROS_First_Mobile_Robot/rosbots_description/
         ```
+2. Settup urdf for RViz
+    - Create a launch folder
+        ```sh
+        $ roscd; cd ..; cd src; cd ROS_First_Mobile_Robot; cd rosbots_description;
+        $ mkdir launch; cd launch;
+        $ touch rviz.launch
+        ```
+    - Launch the rviz.launch
+        ```sh
+        $ roslaunch rosbots_description rviz.launch
+        ```
+2. Settup for Gazebo
+    - Create a launch file
+        ```sh
+        $ roscd; cd ..; cd src; cd ROS_First_Mobile_Robot; cd rosbots_description; cd launch;
+        $ touch spawn.launch
+        ```
+    - Launch the spawn.launch
+        ```sh
+        $ roslaunch rosbots_description spawn.launch
+        ```
+3. Add control to robot (Gazebo)
+    - Add code snippet into rosbots.xacro inside the robot tag
+        ```sh
+        <gazebo>
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+            <legacyMode>false</legacyMode>
+            <alwaysOn>true</alwaysOn>
+            <publishWheelTF>true</publishWheelTF>
+            <publishTf>1</publishTf>
+            <publishWheelJointState>true</publishWheelJointState>
+            <updateRate>100.0</updateRate>
+            <leftJoint>wheel_left_joint</leftJoint>
+            <rightJoint>wheel_right_joint</rightJoint>
+            <wheelSeparation>1.1</wheelSeparation>
+            <wheelDiameter>0.52</wheelDiameter>
+            <wheelAcceleration>1.0</wheelAcceleration>
+            <torque>20</torque>
+            <commandTopic>/part2_cmr/cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+        </plugin>
+        </gazebo>
+        ```
+    - Empty the simulation
+        ```sh
+        $ rosservice call /gazebo/delete_model "model_name: 'rosbots'"
+        ```
+    - Run spawn.launch
+        ```sh
+        $ roslaunch rosbots_description spawn.launch
+        ```
+    - Check the part2_cmr/cmd_vel topic
+        ```sh
+        $ rostopic list
+        ```
+    - Run the keyboard_teleop to control the robot
+        ```sh
+        $ rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/part2_cmr/cmd_vel
+        ```
+    
+    > IMPORTANT NOTE!!: In the current Exercise you have just added a Gazebo plugin to your robot, which will allow it to move around. This is pretty cool, but there is one inconvenient. Whenever you delete a model that has a Gazebo plugin, the Gazebo simulation will crash. This is a known issue with Gazebo, but it is quite incovenient for this Unit, since we have been spawning/deleting our robot several times.
+    
+    > So, from now on, in order to delete the model so that you can spawn an updated one, you will have to change to another Unit (ie, Unit 0) and come back to this one. This way, the Gazbo simulation will be reset and you will be able to spawn again your robot on it.

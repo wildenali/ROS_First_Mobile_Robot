@@ -51,3 +51,32 @@
         ```
         Kalau gagal coba cek di WiKi ROS Install
     - Install ROS Related packages for the Camera
+        ```sh
+        $ sudo apt-get install ros-kinetic-compressed-image-transport
+        $ sudo apt-get install ros-kinetic-image-common
+        $ sudo apt-get install ros-kinetic-image-view
+        $ cd ~/catkin_ws/src
+        $ git clone https://github.com/dganbold/raspicam_node.git
+        $ cd ~/catkin_ws/
+        $ catkin_make --pkg raspicam_node
+        ```
+        Execute inside the RaspberryPi
+        Terminal #1
+        ```sh
+        $ cd ~/catkin_ws/
+        $ source devel/setup.bash
+        $ roslaunch raspicam_node camera_module_v2_640x480_30fps.launch
+        ```
+        Terminal #2
+        ```sh
+        # View Image
+        $ rosservice call /raspicam_node/start_capture
+
+        # View Strem
+        $ rosrun image_view image_view image:=/raspicam_node/image_raw
+        $ rosrun rqt_image_view rqt_image_view
+        ```
+
+        https://www.theconstructsim.com/publish-image-stream-ros-kinetic-raspberry-pi/
+
+        https://www.youtube.com/watch?v=TABVZf5vKVA&list=PLK0b4e05LnzYHQkvmEN4YY2VCB5OdEMVV

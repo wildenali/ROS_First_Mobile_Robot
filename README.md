@@ -11,7 +11,7 @@
 ## Building the Physical Robot
 
 1. Step by step how to mount the 2 wheeled robot (ngerakit)
-2. Seeting up the Camera and all the ROS environment
+2. Setting up the Camera and all the ROS environment
     - Install Ubuntu Mate in RaspberryPi
         * Download the UbuntuMate Version for RaspberryPi. We recommedn the version RaspberryPi ARMv7: [DownloadPage](https://ubuntu-mate.org/download/)
         * Burn that image into your microSD card using gnome-disk-utility. To install it just execute this command in your local computer:
@@ -80,3 +80,26 @@
         https://www.theconstructsim.com/publish-image-stream-ros-kinetic-raspberry-pi/
 
         https://www.youtube.com/watch?v=TABVZf5vKVA&list=PLK0b4e05LnzYHQkvmEN4YY2VCB5OdEMVV
+
+
+
+## Creating a Simulation of the Robot
+
+1. Creating URDF file
+    - Create a new package
+        ```sh
+        $ roscd; cd ..; cd src; cd ROS_First_Mobile_Robot
+        $ catkin_create_pkg rosbots_description rospy
+        ```
+    - Create urdf folder
+        ```sh
+        $ roscd rosbots_description
+        $ mkdir urdf; cd urdf;
+        $ touch rosbots.xacro
+        $ chmod +x rosbots.xacro
+        ```
+    - Copy the .dae files
+        ```sh
+        $ roscd duckietown_description;
+        $ cp -rf meshes ~/catkin_ws/src/ROS_First_Mobile_Robot/rosbots_description/
+        ```

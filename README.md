@@ -18,6 +18,15 @@
             ```sh
             $ sudo apt-get install gnome-disk-utility
             ```
+        * Reboot the RaspberryPi with this new image burned and follow the classical Ubuntu configuration. For that you will need to hook up your raspberry pi to a screen through HDMI, connect a mouse and a keyboard.
     - Setup Camera in RaspberryPi
+        * Install the following inside RaspberryPi:
+            ```sh
+            $ sudo apt-get install libraspberrypi-dev
+            $ sudo pip install picamera
+            ```
+        * Edit the file /boot/config.txt ** so that these two elemenst are **UNcommented:
+        > start_x=1
+        > gpu_mem=128
     - Install ROS in RaspberryPi
     - Install ROS Related packages for the Camera

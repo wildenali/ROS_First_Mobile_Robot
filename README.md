@@ -26,7 +26,7 @@
             $ sudo pip install picamera
             ```
         * Edit the file /boot/config.txt ** so that these two elemenst are **UNcommented:
-            start_x=1
-            gpu_mem=128
+            - start_x=1
+            - gpu_mem=128
     - Install ROS in RaspberryPi
     - Install ROS Related packages for the Camera

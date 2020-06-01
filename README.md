@@ -261,3 +261,42 @@
         > Add two new displays using the Add button on the bottom-left of the RViz screen. The first display should be RobotModel and the other one should be Image.
 
         > Expand the image display by double-clicking on its name and set the Image Topic to /rosbots/camera1/image_raw (as shown in the image below).
+7. Adding the IMU Sensor to the Robot
+    - Edit rosbots.gazebo.xacro to add IMU sensor
+    - Reset gazebo
+    - Test the spawn.launch file
+        from
+        ```sh
+        $ roslaunch rosbots_description spawn.launch
+        ```
+    - Verify that IMU sensor is actually working correctly
+        from
+        ```sh
+        $ rostopic list
+        $ rostopic info /imu/data
+        ```
+        Should see something like this:
+        ```sh
+        Type: sensor_msgs/Imu
+
+        Publishers:
+            * /gazebo (http://10.8.0.1:43002/)
+
+        Subscribers: None
+        ```
+        Test the topic
+        ```sh
+        $ rostopic echo /imu/data -n1
+        ```
+
+8. Add some specific data
+    - Edit rosbots.gazebo.xacro
+    - Test the spawn.launch and rviz.launch file
+        from
+        ```sh
+        $ roslaunch rosbots_description spawn.launch
+        $ rosrun gazebo_ros spawn_model -file /home/user/catkin_ws/src/ROS_First_Mobile_Robot/rosbots_description/object.urdf -urdf -x 1 -y 0 -z 1 -model my_object
+        $ roslaunch rosbots_description rviz.launch
+        $ rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/part2_cmr/cmd_vel
+        ```
+    - Check Image and IMU data on RViz

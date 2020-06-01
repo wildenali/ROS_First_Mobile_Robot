@@ -202,8 +202,9 @@
         $ chmod +x rosbots.gazebo.xacro
         ```
     - Edit rosbots.xacro file:
-        > Remove <gazebo> tag from 
-        Add this line at the beginning of your rosbots.xacro file, inside the <robot> tag.
+        > Remove gazebo tag from 
+        Add this line at the beginning of your rosbots.xacro file, inside the robot tag.
+        
         > <xacro:include filename="$(find rosbots_description)/urdf/rosbots.gazebo.xacro" />
     - Test the spawn.launch and rviz.launch file
         from

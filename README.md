@@ -114,7 +114,7 @@
         ```sh
         $ roslaunch rosbots_description rviz.launch
         ```
-2. Settup for Gazebo
+3. Settup for Gazebo
     - Create a launch file
         ```sh
         $ roscd; cd ..; cd src; cd ROS_First_Mobile_Robot; cd rosbots_description; cd launch;
@@ -124,7 +124,7 @@
         ```sh
         $ roslaunch rosbots_description spawn.launch
         ```
-3. Add control to robot (Gazebo)
+4. Add control to robot (Gazebo)
     - Add code snippet into rosbots.xacro inside the robot tag
         ```sh
         <gazebo>
@@ -168,7 +168,8 @@
     > IMPORTANT NOTE!!: In the current Exercise you have just added a Gazebo plugin to your robot, which will allow it to move around. This is pretty cool, but there is one inconvenient. Whenever you delete a model that has a Gazebo plugin, the Gazebo simulation will crash. This is a known issue with Gazebo, but it is quite incovenient for this Unit, since we have been spawning/deleting our robot several times.
     
     > So, from now on, in order to delete the model so that you can spawn an updated one, you will have to change to another Unit (ie, Unit 0) and come back to this one. This way, the Gazbo simulation will be reset and you will be able to spawn again your robot on it.
-4. Using the XACRO Macros
+5. Using the XACRO Macros
+
     Organize the existing project to make it more readable and modular. Even though our robot description only had a few components, we had written a lengthy xacro file. So, let's start doing some modifications to the files
     - Change the spawn.launch file in launch folder
         from
@@ -191,6 +192,25 @@
     - Test the spawn.launch and rviz.launch file
         from
         ```sh
-        $roslaunch rosbots_description spawn.launch
-        $roslaunch rosbots_description rviz.launch
+        $ roslaunch rosbots_description spawn.launch
+        $ roslaunch rosbots_description rviz.launch
+        $ rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/part2_cmr/cmd_vel
         ```
+    - Create new xacro file named rosbots.gazebo.xacro inside the URDF folder
+        ```sh
+        $ roscd; cd ..; cd src; cd ROS_First_Mobile_Robot; cd rosbots_description; cd urdf;
+        $ chmod +x rosbots.gazebo.xacro
+        ```
+    - Edit rosbots.xacro file:
+        > Remove <gazebo> tag from 
+        Add this line at the beginning of your rosbots.xacro file, inside the <robot> tag.
+        > <xacro:include filename="$(find rosbots_description)/urdf/rosbots.gazebo.xacro" />
+    - Test the spawn.launch and rviz.launch file
+        from
+        ```sh
+        $ roslaunch rosbots_description spawn.launch
+        $ roslaunch rosbots_description rviz.launch
+        $ rostopic list , see/part2_cmr/cmd_vel
+        $ rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/part2_cmr/cmd_vel
+        ```
+6. Adding the Sensors to the Robot

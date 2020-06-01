@@ -318,8 +318,123 @@ SKIP
 
 
 ## Navigation Line Following
-- Get images from the ROS topic and convert them into OpenCV format
-- Process the images using OpenCV libraries to obtain the data we want for the task
-- Move the robot along the yellow line, based on the data obtained
+1. Get images from the ROS topic and convert them into OpenCV format
+    - Create new package named my_following_line_package inside ROS_First_Mobile_Robot
+        ```sh
+        $ catkin_create_pkg my_following_line_package rospy
+        ```
+    - Create 2 new folder named launch and scripts
+    - Create python file named line_follower_basics.py in the scripts folder
+        > chmod +x line_follower_basics.py
+    - Have a look what a different variable inside sensor_msgs/Image
+        ```sh
+        $ rosmsg show  sensor_msgs/Image
+        
+        std_msgs/Header header  
+            uint32 seq
+            time stamp
+            string frame_id
+        uint32 height
+        uint32 width
+        string encoding
+        uint8 is_bigendian
+        uint32 step
+        uint8[] data
+        ```
+        Extract data from certain variables by doing the following:
+        ```sh
+        $ rostopic echo -n1 /robot1/camera1/image_raw/height
+        $ rostopic echo -n1 /robot1/camera1/image_raw/width
+        $ rostopic echo -n1 /robot1/camera1/image_raw/encoding
+        $ rostopic echo -n1 /robot1/camera1/image_raw/data
+        ```
+    - Test the python file
+        ```sh
+        rosrun my_following_line_package line_follower_basics.py
+        ```
+2. Process the images using OpenCV libraries to obtain the data we want for the task
+- Get Image Info and Crop the image
+        ># We get image dimensions and crop the parts of the image we don't need
+        
+        ># Bear in mind that because its image matrix first value is start and second value is down limit.
 
-### Get images from the ROS topic and convert them into OpenCV format
+        ># Select the limits so that they get the line not too close, not too far, and the minimum portion possible
+        
+        ># To make the process faster.
+        
+        >height, width, channels = cv_image.shape
+        
+        >descentre = 160
+        
+        >rows_to_watch = 20
+        
+        >crop_img = cv_image[(height)/2+descentre:(height)/2+(descentre+rows_to_watch)][1:width]
+    - Convert from BGR to HSV
+        ```sh
+        # Convert from RGB to HSV
+        hsv = cv2.cvtColor(crop_img, cv2.COLOR_BGR2HSV).astype(np.float)
+
+        # Define the Yellow Colour in HSV
+        #RGB
+        #[[[222,255,0]]]
+        #BGR
+        #[[[0,255,222]]]
+        """
+        To know which color to track in HSV, Put in BGR. Use ColorZilla to get the color registered by the camera
+        >>> yellow = np.uint8([[[B,G,R ]]])
+        >>> hsv_yellow = cv2.cvtColor(yellow,cv2.COLOR_BGR2HSV)
+        >>> print( hsv_yellow )
+        [[[ 34 255 255]]
+        """
+        lower_yellow = np.array([20,100,100])
+        upper_yellow = np.array([50,255,255])
+        ```
+    - Apply the mask
+    
+        Now, you need to generate a version of the cropped image in which you only see two colors: black and white. The white will be all the colors you consider yellow and the rest will be black. It's a binary image.
+
+        Why do you need to do this? It basically has two functions:
+
+        - In doing this, you don't have continuous detection. It is the color or it's NOT, there is no in-between. This is vital for the centroid calculation that will be done after, because it only works on the principal of YES or NO.
+        - Second, it will allow the generation of the result image afterwards, in which you extract everything on the image except the color line, seeing only what you are interested in seeing.
+
+        ```sh
+        # Threshold the HSV image to get only yellow colors
+        mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+        
+        # Bitwise-AND mask and original image
+        res = cv2.bitwise_and(crop_img,crop_img, mask= mask)
+        ```
+    - Get The Centroids, draw a circle where the centroid is, and show all the images
+        ```sh
+        # Calculate centroid of the blob of binary image using ImageMoments
+        m = cv2.moments(mask, False)
+        try:
+            cx, cy = m['m10']/m['m00'], m['m01']/m['m00']
+        except ZeroDivisionError:
+            cy, cx = height/2, width/2
+        ```
+        show the circle
+        ```sh
+        cv2.circle(res,(centre_cicle_x, centre_cicle_y), LineWidth,(BGRColour of line),TypeOfLine)
+        ```
+
+
+3. Move the robot along the yellow line, based on the data obtained
+    - Get the Proportional control
+        ```sh
+        error_x = cx - width / 2;
+        angular_z = -error_x / 100;
+        rospy.loginfo("ANGULAR VALUE SENT===>"+str(angular_z))
+        twist_object = Twist();
+        twist_object.linear.x = 0.2;
+        twist_object.angular.z = -error_x / 100;
+        # Make it start turning
+        self.moverosbots_object.move_robot(twist_object)
+        ```
+    - Create move_robot.py file inside scripts folder (dont forget to get permissiont with chmod +x move_robot.py)
+    - Create follow_line_step_hsv.py file inside scripts folder (dont forget to get permissiont with chmod +x follow_line_step_hsv.py)
+    - Execute the python file
+        ```sh
+        $ rosrun my_following_line_package follow_line_step_hsv.py
+        ```

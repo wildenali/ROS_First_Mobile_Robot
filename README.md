@@ -168,3 +168,29 @@
     > IMPORTANT NOTE!!: In the current Exercise you have just added a Gazebo plugin to your robot, which will allow it to move around. This is pretty cool, but there is one inconvenient. Whenever you delete a model that has a Gazebo plugin, the Gazebo simulation will crash. This is a known issue with Gazebo, but it is quite incovenient for this Unit, since we have been spawning/deleting our robot several times.
     
     > So, from now on, in order to delete the model so that you can spawn an updated one, you will have to change to another Unit (ie, Unit 0) and come back to this one. This way, the Gazbo simulation will be reset and you will be able to spawn again your robot on it.
+4. Using the XACRO Macros
+    Organize the existing project to make it more readable and modular. Even though our robot description only had a few components, we had written a lengthy xacro file. So, let's start doing some modifications to the files
+    - Change the spawn.launch file in launch folder
+        from
+        ```sh
+        <param name="robot_description" command="cat '$(find rosbots_description)/urdf/rosbots.xacro'" />
+        ```
+        to
+        ```sh
+        <param name="robot_description" command="$(find xacro)/xacro.py '$(find rosbots_description)/urdf/rosbots.xacro'" />
+        ```
+    - Change the rviz.launch file in launch folder
+        from
+        ```sh
+        <param name="robot_description" command="cat '$(find rosbots_description)/urdf/rosbots.xacro'" />
+        ```
+        to
+        ```sh
+        <param name="robot_description" command="$(find xacro)/xacro.py  '$(find rosbots_description)/urdf/rosbots.xacro'"/>
+        ```
+    - Test the spawn.launch and rviz.launch file
+        from
+        ```sh
+        $roslaunch rosbots_description spawn.launch
+        $roslaunch rosbots_description rviz.launch
+        ```

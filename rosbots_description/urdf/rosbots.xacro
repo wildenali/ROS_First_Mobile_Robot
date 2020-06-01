@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="rosbots" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+<!-- tag xacro:include di tambahkan, cek pada step ke 4. Using the XACRO Macros -->
+<xacro:include filename="$(find rosbots_description)/urdf/rosbots.gazebo.xacro" />
+
     <link name="base_footprint"/>
 
     <joint name="base_joint" type="fixed">
@@ -403,7 +406,8 @@
       </collision>
     </link>
 
-    <gazebo>
+    <!-- tag gazebo di nonaktifkan, cek pada step ke 4. Using the XACRO Macros -->
+    <!-- <gazebo>
         <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
             <legacyMode>false</legacyMode>
             <alwaysOn>true</alwaysOn>
@@ -422,6 +426,6 @@
             <odometryFrame>odom</odometryFrame>
             <robotBaseFrame>base_link</robotBaseFrame>
         </plugin>
-    </gazebo>
+    </gazebo> -->
     
 </robot>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="rosbots" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<!-- tag xacro:include di tambahkan, cek pada step ke 4. Using the XACRO Macros -->
+<!-- tag xacro:include di tambahkan, cek pada step ke 5. Using the XACRO Macros -->
 <xacro:include filename="$(find rosbots_description)/urdf/rosbots.gazebo.xacro" />
 
     <link name="base_footprint"/>
@@ -406,7 +406,7 @@
       </collision>
     </link>
 
-    <!-- tag gazebo di nonaktifkan, cek pada step ke 4. Using the XACRO Macros -->
+    <!-- tag gazebo di nonaktifkan, cek pada step ke 5. Using the XACRO Macros -->
     <!-- <gazebo>
         <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
             <legacyMode>false</legacyMode>
@@ -427,5 +427,28 @@
             <robotBaseFrame>base_link</robotBaseFrame>
         </plugin>
     </gazebo> -->
+
+    <!-- tag camera ditambahkan, cek pada step ke 6. Adding the Camera to the Robot -->
+    <joint name="camera_joint" type="fixed">
+        <origin xyz="0.49 -0.03 0.75" rpy="0 0.21 0" />
+        <parent link="base_link"/>
+        <child link="camera_link" />
+    </joint>
     
+    <link name="camera_link">
+        <visual>
+            <geometry>
+            <mesh filename="package://duckietown_description/meshes/camera.dae" scale="4.0 4.0 4.0"/>
+            </geometry>
+            <origin xyz="0.0 0 0" rpy="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+            <mesh filename="package://duckietown_description/meshes/camera.dae" scale="4.0 4.0 4.0"/>
+            </geometry>
+            <origin xyz="0.0 0 0" rpy="0 0 0"/>
+        </collision>
+    </link>
+    <!-- tag camera ditambahkan, cek pada step ke 6. Adding the Camera to the Robot -->
+
 </robot>

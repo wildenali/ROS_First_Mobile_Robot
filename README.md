@@ -204,7 +204,7 @@
     - Edit rosbots.xacro file:
         > Remove gazebo tag from 
         Add this line at the beginning of your rosbots.xacro file, inside the robot tag.
-        
+
         > <xacro:include filename="$(find rosbots_description)/urdf/rosbots.gazebo.xacro" />
     - Test the spawn.launch and rviz.launch file
         from
@@ -214,4 +214,50 @@
         $ rostopic list , see/part2_cmr/cmd_vel
         $ rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/part2_cmr/cmd_vel
         ```
-6. Adding the Sensors to the Robot
+6. Adding the Camera to the Robot
+    - Edit rosbots.xacro to add camera
+    - Reset gazebo
+    - Test the spawn.launch file
+        from
+        ```sh
+        $ roslaunch rosbots_description spawn.launch
+        ```
+    - Edit rosbots.gazebo.xacro to add the camera behavior (like take image or record video) to the link
+    - Test the spawn.launch file
+        from
+        ```sh
+        $ roslaunch rosbots_description spawn.launch
+        ```
+    - Check the topic
+        ```sh
+        rostopic list
+        ```
+        should get the following topics now:
+        ```sh
+        /rosbots/camera1/camera_info
+        /rosbots/camera1/image_raw
+        /rosbots/camera1/image_raw/compressed
+        /rosbots/camera1/image_raw/compressed/parameter_descriptions
+        /rosbots/camera1/image_raw/compressed/parameter_updates
+        /rosbots/camera1/image_raw/compressedDepth
+        /rosbots/camera1/image_raw/compressedDepth/parameter_descriptions
+        /rosbots/camera1/image_raw/compressedDepth/parameter_updates
+        /rosbots/camera1/image_raw/theora
+        /rosbots/camera1/image_raw/theora/parameter_descriptions
+        /rosbots/camera1/image_raw/theora/parameter_updates
+        /rosbots/camera1/parameter_descriptions
+        /rosbots/camera1/parameter_updates
+        ```
+    - Visualize the camera data with RViz, populate the simulated environment with an object obstacle (object.urdf), to better see the camera's result.
+        ```sh
+        $ cp /home/simulations/public_sim_ws/src/all/turtlebot/turtlebot_navigation_gazebo/urdf/object.urdf /home/user/catkin_ws/src/ROS_First_Mobile_Robot/rosbots_description
+        $ rosrun gazebo_ros spawn_model -file /home/user/catkin_ws/src/ROS_First_Mobile_Robot/rosbots_description/object.urdf -urdf -x 1 -y 0 -z 1 -model my_object
+        $ roslaunch rosbots_description rviz.launch
+        ```
+        > Add Image
+
+        > Select base_link in the Fixed Frame field.
+
+        > Add two new displays using the Add button on the bottom-left of the RViz screen. The first display should be RobotModel and the other one should be Image.
+
+        > Expand the image display by double-clicking on its name and set the Image Topic to /rosbots/camera1/image_raw (as shown in the image below).

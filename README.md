@@ -300,3 +300,26 @@
         $ rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/part2_cmr/cmd_vel
         ```
     - Check Image and IMU data on RViz
+
+
+
+## Connecting to Real Robot
+### ------------------------
+SKIP
+### ------------------------
+
+
+
+## Creating the Motor Drivers
+### ------------------------
+SKIP
+### ------------------------
+
+
+
+## Navigation Line Following
+- Get images from the ROS topic and convert them into OpenCV format
+- Process the images using OpenCV libraries to obtain the data we want for the task
+- Move the robot along the yellow line, based on the data obtained
+
+### Get images from the ROS topic and convert them into OpenCV format
